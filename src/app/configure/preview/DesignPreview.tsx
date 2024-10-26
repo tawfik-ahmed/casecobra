@@ -60,10 +60,8 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
 
   const handleCheckout = () => {
     if (user) {
-      // create payment session
       createPaymentSession({ configId: id });
     } else {
-      // need to log in
       localStorage.setItem("configurationId", id);
       setIsLoginModalOpen(true);
     }
