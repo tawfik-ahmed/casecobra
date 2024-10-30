@@ -26,6 +26,14 @@ export const createCheckoutSession = async ({
     throw new Error("You need to be logged in");
   }
 
+  let existingUser = await db.user.findUnique({ where: { id: user.id } });
+
+  if (!existingUser) {
+    existingUser = await db.user.create({
+      data: { id: user.id, email: user.email || "" },
+    });
+  }
+
   const { finish, material } = configuration;
 
   let price = BASE_PRICE;
@@ -33,22 +41,18 @@ export const createCheckoutSession = async ({
   if (material === "polycarbonate")
     price += PRODUCT_PRICES.material.polycarbonate;
 
-  let order: Order | undefined = undefined;
-
-  const existingOrder = await db.order.findFirst({
+  let order: Order | null = await db.order.findFirst({
     where: {
-      userId: user.id,
+      userId: existingUser.id,
       configurationId: configuration.id,
     },
   });
 
-  if (existingOrder) {
-    order = existingOrder;
-  } else {
+  if (!order) {
     order = await db.order.create({
       data: {
         amount: price / 100,
-        userId: user.id,
+        userId: existingUser.id,
         configurationId: configuration.id,
       },
     });
@@ -70,7 +74,7 @@ export const createCheckoutSession = async ({
     mode: "payment",
     shipping_address_collection: { allowed_countries: ["US", "EG"] },
     metadata: {
-      userId: user.id,
+      userId: existingUser.id,
       orderId: order.id,
     },
     line_items: [{ price: product.default_price as string, quantity: 1 }],
