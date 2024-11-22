@@ -7,6 +7,9 @@ import { Toaster } from "@/components/ui/toaster";
 import Providers from "@/components/Providers";
 import { constructMetadata } from "@/lib/utils";
 import { AuthProvider } from "./AuthProvider";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { ourFileRouter } from "@/app/api/uploadthing/core";
+import { extractRouterConfig } from "uploadthing/server";
 
 const recursive = Recursive({ subsets: ["latin"] });
 
@@ -21,6 +24,7 @@ export default function RootLayout({
     <AuthProvider>
       <html lang="en">
         <body className={recursive.className}>
+          <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
           <Navbar />
 
           <main className="flex grainy-light flex-col min-h-[calc(100vh-3.5rem-1px)]">

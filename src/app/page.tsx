@@ -10,7 +10,6 @@ import Link from "next/link";
 export default async function Home() {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
-  console.log("test + ", user);
   return (
     <div className="bg-slate-50 grainy-light">
       <section>
