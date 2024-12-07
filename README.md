@@ -1,4 +1,4 @@
-# CaseCobra - Design Your Custom Phone Cases
+# CaseCobra - Design Your Custom Phone Cases 🐍
 
 ![CaseCobra Image](image.png)
 
